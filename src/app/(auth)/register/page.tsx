@@ -1,5 +1,5 @@
 'use client'
-import { useSession, signIn, signOut, signUp } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 
 export default function RegisterPage() {
   // const { data: session } = useSession()

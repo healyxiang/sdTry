@@ -48,7 +48,7 @@ export const Hero = () => {
             </div>
           </div>
         </div>
-        <div className="flex w-full items-center justify-center lg:w-1/2">
+        {/* <div className="flex w-full items-center justify-center lg:w-1/2">
           <div className="">
             <Image
               src={heroImg}
@@ -60,12 +60,12 @@ export const Hero = () => {
               placeholder="blur"
             />
           </div>
-        </div>
+        </div> */}
       </Container>
       <Container>
         <div className="flex flex-col justify-center">
           <div className="text-center text-xl text-gray-700 dark:text-white">
-            Trusted by <span className="text-primary-600">2000+</span> customers worldwide
+            {/* Trusted by <span className="text-primary-600">2000+</span> customers worldwide */}
           </div>
 
           {/* <div className="mt-10 flex flex-wrap justify-center gap-5 md:justify-around">
