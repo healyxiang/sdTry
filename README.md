@@ -337,6 +337,13 @@ Consider removing the following features that cannot be used in a static build:
 
 Using the template? Support this effort by giving a star on GitHub, sharing your own blog and giving a shoutout on Twitter or becoming a project [sponsor](https://github.com/sponsors/timlrx).
 
+## 数据库部分
+
+```
+npx prisma migrate dev --name init_test // 根据 prisma model 生成sql，操作远程数据库，生成表
+npx prisma generate // 生成prisma 客户端
+```
+
 ## Licence
 
 [MIT](https://github.com/timlrx/tailwind-nextjs-starter-blog/blob/main/LICENSE) © [Timothy Lin](https://www.timlrx.com)

@@ -47,5 +47,14 @@ export const authOptions: NextAuthOptions = {
       // console.log('token:', token)
       return { ...session, test: 3333 }
     },
+    async redirect({ url, baseUrl }) {
+      console.log('url in redirect:', url)
+      console.log('url in baseUrl:', baseUrl)
+
+      if (url.startsWith('/')) return `${baseUrl}${url}`
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url
+      return baseUrl
+    },
   },
 }

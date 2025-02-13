@@ -2,8 +2,12 @@
 import { useEffect } from 'react'
 import { useSession, signIn, signOut } from 'next-auth/react'
 
+import { Button } from '@/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+
 export default function UserBtn() {
   const { data: session } = useSession()
+  const userImg = session?.user?.image
   console.log('session in UserBtn:', session)
 
   useEffect(() => {
@@ -26,10 +30,21 @@ export default function UserBtn() {
 
   if (session) {
     return (
-      <>
-        {session?.user?.name} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
+      <Popover>
+        {/* <button onClick={() => signOut()}>
+          <img className="w-8 rounded-md" src={session.user?.image} />
+        </button> */}
+        <PopoverTrigger asChild>
+          <Button variant="ghost">
+            {userImg && <img className="w-8 rounded-md" src={userImg} />}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-full">
+          <Button variant="secondary" onClick={() => signOut()}>
+            Sign Out
+          </Button>
+        </PopoverContent>
+      </Popover>
     )
   }
   return (

@@ -48,8 +48,8 @@ const Header = () => {
             ))}
         </div>
         {/* <SearchButton /> */}
-        <ThemeSwitch />
         <UserBtn />
+        <ThemeSwitch />
         <MobileNav />
       </div>
     </header>

@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { uploadToR2 } from '@/lib/upload'
 import { ModelLabResponse } from '@/types/ModelLab'
@@ -100,14 +101,16 @@ const Img2Img = () => {
             {
               'bg-slate-100': !imageUrls.length,
               'dark:bg-slate-700': !imageUrls.length,
+              'animate-pulse rounded-md bg-slate-100': isPending,
             }
           )}
         >
           {imageUrls.map((url, index) => (
             <img key={index} src={url} alt={`Uploaded ${index + 1}`} className="w-full" />
           ))}
-          {isPending && 'Is Processing...'}
-          {!imageUrls.length && <p className="text-">Your success story begins here</p>}
+          {!imageUrls.length && !isPending && (
+            <p className="text-">Your success images begins here</p>
+          )}
         </div>
       </div>
     </div>
