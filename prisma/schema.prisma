@@ -45,6 +45,7 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  tasks         Task[]
  
   @@map("users")
 }
@@ -56,4 +57,45 @@ model VerificationToken {
  
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+enum TaskType {
+  TEXT2IMG
+  IMG2IMG
+  AVATAR
+}
+
+enum TaskStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  type        TaskType
+  status      TaskStatus @default(PENDING)
+  requestId   String @default("none") // modellabs的requestId
+  fetchUrl    String?
+  futureLinks String[] // 未来可能的图片链接
+  prompt      String?    @db.Text
+  initImage   String?    // 初始图片的URL，用于img2img
+  outputImage String[]    // 生成的图片URL
+  modelId     String?    // 使用的模型ID
+  settings    Json?      // 其他设置参数，如尺寸、步数等
+  error       String?    @db.Text
+  
+  // 时间戳
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  // 关联用户
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([type])
+  @@index([status])
+  @@map("tasks")
 }

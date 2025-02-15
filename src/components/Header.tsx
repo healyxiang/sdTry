@@ -46,6 +46,14 @@ const Header = () => {
                 {link.title}
               </Link>
             ))}
+          <Link
+            href="/dashboard"
+            className={cn(
+              'm-1 block font-medium text-gray-900 hover:text-primary-500 dark:text-gray-100 dark:hover:text-primary-400'
+            )}
+          >
+            Dashboard
+          </Link>
         </div>
         {/* <SearchButton /> */}
         <UserBtn />

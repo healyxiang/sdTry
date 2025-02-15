@@ -1,3 +1,12 @@
+import { TaskStatus } from '@prisma/client'
+
+export enum ModelLabTaskStatus {
+  PENDING = 'pending',
+  PROCESSING = 'processing',
+  COMPLETED = 'completed',
+  FAILED = 'failed',
+}
+
 export interface Meta {
   base64: string
   enhance_prompt: string
@@ -30,10 +39,17 @@ export interface Meta {
 }
 
 export interface ModelLabResponse {
-  status: string
+  status: TaskStatus
   generationTime: number
   id: number
   output: string[]
   proxy_links: string[]
   meta: Meta
+  eta: number
+  tip: string
+  tip_1: string
+  messege: string
+  webhook_status: string
+  fetch_result: string
+  future_links: string[]
 }

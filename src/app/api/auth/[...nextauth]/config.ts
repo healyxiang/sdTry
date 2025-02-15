@@ -6,6 +6,13 @@ import GithubProvider from 'next-auth/providers/github'
 
 import type { NextAuthOptions } from 'next-auth'
 
+export interface SessionUser {
+  id: string
+  name: string
+  email: string
+  image: string
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -32,20 +39,17 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async session({ session, token, user }) {
+      console.log('session in callback:', session)
+      console.log('token in callback:', token)
+      console.log('user in callback:', user)
+      return { ...session, user: { ...session.user, id: token.sub } }
+    },
+    async jwt({ token, user, account, profile }) {
       if (user) {
         token.id = user.id
       }
       return token
-    },
-    async session({ session, token }) {
-      // if (token) {
-      //   session.user.id = token.id
-      // }
-      // return session
-      // console.log('session:', session)
-      // console.log('token:', token)
-      return { ...session, test: 3333 }
     },
     async redirect({ url, baseUrl }) {
       console.log('url in redirect:', url)

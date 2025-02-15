@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider, useQuery, useMutation } from '@tanstack/react-query'
 import { ModelLabResponse } from '@/types/ModelLab'
 import { Prompt } from '@/constant/prompt'
+import { TaskStatus } from '@prisma/client'
 
 interface ImgBody {
   initImg: string
@@ -11,13 +12,22 @@ const communityImg2ImgApi = async ({ initImg }: ImgBody) => {
     method: 'POST',
     body: JSON.stringify({
       model_id: 'dark-sushi-25d-v4',
+      // lora_model: 'kitagawa-marin',
+      // model_id: 'arienmixxl',
+      // model_id: 'flux-pro-1.1',
+      // model_id: 'realistic-vision-v60',
+      // lora_model: '(((POVSittingBlowjob)))',
       scheduler: 'UniPCMultistepScheduler',
       prompt: Prompt.test, // 替换为实际提示
       init_image: initImg,
     }),
   })
   const data = (await response.json()) as ModelLabResponse
-  return data
+  if (data.status === TaskStatus.COMPLETED) {
+    return data
+  } else {
+    throw new Error('Network response was not ok')
+  }
 }
 
 // API 请求函数

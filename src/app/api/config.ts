@@ -17,15 +17,23 @@ export function stringifyBody(body: Record<string, unknown>) {
   return body
 }
 
-export const customFetch = async (url: string, options: FetchOptions = {}) => {
+export const customFetch = async <T>(
+  url: string,
+  options: FetchOptions = {}
+): Promise<Response> => {
   const { baseURL = BASE_URL, headers = {}, ...restOptions } = options
   // 确保 URL 是以 '/' 开头的
-  const normalizedUrl = url.startsWith('/') ? url : `/${url}`
+  let fullUrl = url
+  if (!url.startsWith('https://')) {
+    fullUrl = url.replace('https://', '')
+    const normalizedUrl = url.startsWith('/') ? url : `/${url}`
 
-  // 组合完整的 URL
-  const fullUrl = `${baseURL}${normalizedUrl}`
-  console.log('fullUrl:', fullUrl)
+    // 组合完整的 URL
+    fullUrl = `${baseURL}${normalizedUrl}`
+    console.log('fullUrl:', fullUrl)
+  }
   try {
+    console.log('fullUrl:', fullUrl)
     const response = await fetch(fullUrl, {
       ...restOptions,
       headers: {
@@ -33,12 +41,14 @@ export const customFetch = async (url: string, options: FetchOptions = {}) => {
         ...headers,
       },
     })
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    const data = await response.json()
+    // if (!response.ok) {
+    //   throw new Error(`HTTP error! status: ${response.status}`)
+    // }
+    console.log('response:', response)
+    const data = (await response.json()) as T
     console.log('response data customFetch:', data)
-    return Response.json(data, { status: 200 })
+    const res = Response.json(data, { status: 200 })
+    return res
   } catch (error) {
     console.error('Fetch error:', error)
     throw error
