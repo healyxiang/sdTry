@@ -4,7 +4,6 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/config'
 import { createTask, updateTask } from '@/lib/db/task'
 import { TaskStatus, TaskType } from '@prisma/client'
 import { User } from '@/types/User'
-import { ModelLabTaskStatus } from '@/types/ModelLab'
 
 export async function POST(req: Request) {
   // 获取用户会话
@@ -16,20 +15,22 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json()
+    console.log('body in img2img route:', body)
     const stringifyBodyData = stringifyBody(body)
 
     // 创建初始任务记录
     const task = await createTask({
       type: 'IMG2IMG',
       userId: user.id,
-      initImage: body.initImg, // 初始图片URL
-      modelId: body.modelId || 'default',
+      initImage: body.init_image, // 初始图片URL
+      modelId: body.model_id || 'default',
       settings: {
         ...body,
         initImg: undefined, // 避免重复存储
         modelId: undefined,
       },
-      status: 'PROCESSING',
+      prompt: body.prompt,
+      status: TaskStatus.processing,
       requestId: 'none', // 初始设置为 none
     })
 
@@ -45,7 +46,7 @@ export async function POST(req: Request) {
       // 如果API调用失败，更新任务状态
       const errorData = await response.json()
       await updateTask(task.id, {
-        status: TaskStatus.FAILED,
+        status: TaskStatus.error,
         error: errorData.message || 'API request failed',
         requestId: 'none', // 更新 requestId
       })
@@ -58,26 +59,26 @@ export async function POST(req: Request) {
 
     if (data.status.toLowerCase() === 'processing') {
       await updateTask(task.id, {
-        status: TaskStatus.PROCESSING,
+        status: TaskStatus.processing,
         fetchUrl: data.fetch_result,
         outputImage: data.output || [],
         futureLinks: data.future_links || [],
-        requestId: data.id || 'none', // 更新 requestId
+        requestId: String(data.id) || 'none', // 更新 requestId
       })
     }
     if (data.status.toLowerCase() === 'success') {
       // 更新任务状态为成功
       await updateTask(task.id, {
-        status: TaskStatus.COMPLETED,
+        status: TaskStatus.success,
         outputImage: data.output, // 假设输出图片在这个位置
         futureLinks: data.output || [], // 存储所有输出图片链接
-        requestId: data.id || 'none', // 更新 requestId
+        requestId: String(data.id) || 'none', // 更新 requestId
       })
     }
 
     if (data.status.toLowerCase() === 'error') {
       await updateTask(task.id, {
-        status: TaskStatus.FAILED,
+        status: TaskStatus.error,
         error: data.message || 'API request failed',
         requestId: String(data.id) || 'none', // 更新 requestId
       })
@@ -85,7 +86,7 @@ export async function POST(req: Request) {
 
     return Response.json(data)
   } catch (error) {
-    console.error('Error in img2img route:', error)
+    console.log('Error in img2img route:', error)
 
     // 如果是已创建的任务发生错误
     if (error instanceof Error) {

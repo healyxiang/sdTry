@@ -51,7 +51,7 @@ export async function POST(request: Request) {
         // 根据返回的状态更新任务
         if (data.status?.toLowerCase() === 'success') {
           await updateTask(task.id, {
-            status: TaskStatus.COMPLETED,
+            status: TaskStatus.success,
             outputImage: data.output || [],
             futureLinks: data.output || [],
           })
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
 
         if (data.status?.toLowerCase() === 'failed') {
           await updateTask(task.id, {
-            status: TaskStatus.FAILED,
+            status: TaskStatus.error,
             error: data.message || 'Task failed',
           })
           return Response.json({ status: 'failed', error: data.message })

@@ -3,28 +3,15 @@ import { Task, TaskType, TaskStatus } from '@prisma/client'
 import prisma from '@/lib/prima'
 import { JsonValue } from '@prisma/client/runtime/library'
 
-// export enum TaskType {
-//   TEXT2IMG = 'TEXT2IMG',
-//   IMG2IMG = 'IMG2IMG',
-//   AVATAR = 'AVATAR',
-// }
-
-// export enum TaskStatus {
-//   PENDING = 'PENDING',
-//   PROCESSING = 'PROCESSING',
-//   COMPLETED = 'COMPLETED',
-//   FAILED = 'FAILED',
-// }
-
 interface CreateTaskInput {
   type: TaskType
   status: TaskStatus
+  userId: string
   requestId: string
   prompt?: string
   initImage?: string
   modelId?: string
   settings?: any
-  userId: string
   fetchUrl?: string
   futureLinks?: string[]
 }
@@ -40,17 +27,21 @@ interface UpdateTaskInput {
 
 // 创建新任务
 export async function createTask(input: CreateTaskInput): Promise<Task> {
+  console.log('createTask input:', input)
   return prisma.task.create({
     data: {
-      type: input.type,
-      prompt: input.prompt,
-      initImage: input.initImage,
-      modelId: input.modelId,
-      settings: input.settings,
-      userId: input.userId,
-      fetchUrl: input.fetchUrl,
-      futureLinks: input.futureLinks || [],
-      status: input.status as TaskStatus,
+      ...input,
+      // type: 'IMG2IMG',
+      // prompt: 'dddddd',
+      // initImage: 'https://assets.yt2pod.one/TEULhxihhx.jpeg',
+      // modelId: 'crystal-clear-xlv1',
+      // requestId: '123',
+      // status: TaskStatus.processing,
+      // userId: '123',
+      // settings: input.settings,
+      // fetchUrl: input.fetchUrl,
+      // futureLinks: input.futureLinks || [],
+      // status: input.status as TaskStatus,
     },
   })
 }
@@ -136,7 +127,7 @@ export async function markTaskAsFailed(taskId: string, error: string): Promise<T
   return prisma.task.update({
     where: { id: taskId },
     data: {
-      status: TaskStatus.FAILED,
+      status: TaskStatus.error,
       error,
     },
   })
@@ -147,7 +138,7 @@ export async function markTaskAsCompleted(taskId: string, outputImage: string[])
   return prisma.task.update({
     where: { id: taskId },
     data: {
-      status: TaskStatus.COMPLETED,
+      status: TaskStatus.success,
       outputImage,
     },
   })

@@ -66,16 +66,16 @@ enum TaskType {
 }
 
 enum TaskStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
+  pending
+  processing
+  success
+  error
 }
 
 model Task {
   id          String     @id @default(cuid())
   type        TaskType
-  status      TaskStatus @default(PENDING)
+  status      TaskStatus @default(pending)
   requestId   String @default("none") // modellabs的requestId
   fetchUrl    String?
   futureLinks String[] // 未来可能的图片链接

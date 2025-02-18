@@ -49,7 +49,11 @@ export default function TaskHistory() {
 
       // 检查处理中的任务状态
       data.tasks.forEach((task) => {
-        if (task.status === 'PROCESSING' && task.fetchUrl && task.fetchUrl.startsWith('https://')) {
+        if (
+          task.status === TaskStatus.processing &&
+          task.fetchUrl &&
+          task.fetchUrl.startsWith('https://')
+        ) {
           checkTaskStatus(task.id)
         }
       })
@@ -68,11 +72,11 @@ export default function TaskHistory() {
 
   const getStatusBadgeColor = (status: TaskStatus) => {
     switch (status) {
-      case 'COMPLETED':
+      case TaskStatus.success:
         return 'bg-green-100 text-green-800'
-      case 'PROCESSING':
+      case TaskStatus.processing:
         return 'bg-blue-100 text-blue-800'
-      case 'FAILED':
+      case TaskStatus.error:
         return 'bg-red-100 text-red-800'
       default:
         return 'bg-gray-100 text-gray-800'

@@ -1,29 +1,34 @@
 import { QueryClient, QueryClientProvider, useQuery, useMutation } from '@tanstack/react-query'
 import { ModelLabResponse } from '@/types/ModelLab'
-import { Prompt } from '@/constant/prompt'
+// import { Prompt } from '@/constant/prompt'
 import { TaskStatus } from '@prisma/client'
+import { models } from '@/constant/models'
 
 interface ImgBody {
   initImg: string
+  modelId: string
 }
 
-const communityImg2ImgApi = async ({ initImg }: ImgBody) => {
+const communityImg2ImgApi = async ({ initImg, modelId }: ImgBody) => {
+  const model = models.find((model) => model.id === modelId)
   const response = await fetch('/api/images/img2img', {
     method: 'POST',
     body: JSON.stringify({
-      model_id: 'dark-sushi-25d-v4',
+      // model_id: 'dark-sushi-25d-v4',
+      model_id: model?.id,
       // lora_model: 'kitagawa-marin',
       // model_id: 'arienmixxl',
       // model_id: 'flux-pro-1.1',
       // model_id: 'realistic-vision-v60',
       // lora_model: '(((POVSittingBlowjob)))',
       scheduler: 'UniPCMultistepScheduler',
-      prompt: Prompt.test, // 替换为实际提示
+      // prompt: Prompt.test, // 替换为实际提示
+      prompt: model?.prompt,
       init_image: initImg,
     }),
   })
   const data = (await response.json()) as ModelLabResponse
-  if (data.status === TaskStatus.COMPLETED) {
+  if (data.status === TaskStatus.success) {
     return data
   } else {
     throw new Error('Network response was not ok')

@@ -27,6 +27,8 @@ module.exports = {
       colors: {
         primary: colors.red,
         gray: colors.gray,
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
       },
       zIndex: {
         60: '60',

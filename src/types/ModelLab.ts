@@ -1,12 +1,5 @@
 import { TaskStatus } from '@prisma/client'
 
-export enum ModelLabTaskStatus {
-  PENDING = 'pending',
-  PROCESSING = 'processing',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
-}
-
 export interface Meta {
   base64: string
   enhance_prompt: string

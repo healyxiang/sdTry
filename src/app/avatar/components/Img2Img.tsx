@@ -45,11 +45,11 @@ const Img2Img = () => {
       try {
         const file = files[0]
         const result = await uploadToR2(file, file.type)
-        console.log('result:', result)
+        console.log('result after uploadToR2:', result)
 
         // 调用 /api/realtime/text2img 接口
         // const response = await fetch('/api/realtime/img2img', {
-        const response = mutate({ initImg: result })
+        const response = mutate({ initImg: result, modelId: selectedModel })
         console.log('response after mutate:')
         // setImageUrls(data.output)
       } catch (error) {
@@ -75,15 +75,20 @@ const Img2Img = () => {
   }
 
   return (
-    <div className="flex gap-4">
+    <div className="flex min-h-[calc(100vh-120px)] gap-4">
       <div className="flex w-1/2 flex-col items-start gap-4 rounded-lg border p-4">
-        <h2>Upload Your Potential</h2>
-        <p>Upload 1-3 selfie photos to kickstart your success!</p>
+        {/* <h2>Upload Your Potential</h2> */}
+        <h2>Upload 1-3 selfie photos to kickstart your success!</h2>
         <div className="w-full rounded-md border-2 border-dashed border-gray-300 p-4">
           <Input type="file" multiple onChange={handleFileChange} />
           {fileImg?.length &&
             fileImg.map((img, index) => (
-              <img key={index} src={img} alt={`Uploaded ${index + 1}`} className="w-full" />
+              <img
+                key={index}
+                src={img}
+                alt={`Uploaded ${index + 1}`}
+                className="mt-2 max-h-[200px]"
+              />
             ))}
           <p>PNG, JPG up to 10MB (1-3 files for best results)</p>
         </div>
@@ -113,7 +118,7 @@ const Img2Img = () => {
           )}
         >
           {imageUrls.map((url, index) => (
-            <img key={index} src={url} alt={`Uploaded ${index + 1}`} className="w-full" />
+            <img key={index} src={url} alt={`Uploaded ${index + 1}`} className="h-full" />
           ))}
           {!imageUrls.length && !isPending && (
             <p className="text-">Your success images begins here</p>
