@@ -15,6 +15,11 @@ import siteMetadata from '@/data/siteMetadata'
 import QueryClientProvider from '@/service/QueryClientProvider'
 import { ThemeProviders } from './theme-providers'
 
+import { initializeServices } from './api/init'
+
+// 初始化服务
+initializeServices().catch(console.error)
+
 const space_grotesk = Space_Grotesk({
   subsets: ['latin'],
   display: 'swap',

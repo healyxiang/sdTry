@@ -47,15 +47,15 @@ export default function TaskHistoryCards() {
       setTasks(data.tasks)
       setTotal(data.total)
 
-      data.tasks.forEach((task) => {
-        if (
-          task.status === TaskStatus.processing &&
-          task.fetchUrl &&
-          task.fetchUrl.startsWith('https://')
-        ) {
-          checkTaskStatus(task.id)
-        }
-      })
+      // data.tasks.forEach((task) => {
+      //   if (
+      //     task.status === TaskStatus.processing &&
+      //     task.fetchUrl &&
+      //     task.fetchUrl.startsWith('https://')
+      //   ) {
+      //     checkTaskStatus(task.id)
+      //   }
+      // })
     } catch (error) {
       console.error('Error fetching tasks:', error)
     } finally {
@@ -65,6 +65,7 @@ export default function TaskHistoryCards() {
 
   useEffect(() => {
     if (session) {
+      console.log('call fetch tasks')
       fetchTasks()
     }
   }, [session, page])

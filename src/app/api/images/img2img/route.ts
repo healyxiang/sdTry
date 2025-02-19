@@ -4,6 +4,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/config'
 import { createTask, updateTask } from '@/lib/db/task'
 import { TaskStatus, TaskType } from '@prisma/client'
 import { User } from '@/types/User'
+import { enqueueTask } from '@/lib/rabbitmq/taskQueue'
 
 export async function POST(req: Request) {
   // 获取用户会话
@@ -63,7 +64,14 @@ export async function POST(req: Request) {
         fetchUrl: data.fetch_result,
         outputImage: data.output || [],
         futureLinks: data.future_links || [],
-        requestId: String(data.id) || 'none', // 更新 requestId
+        requestId: String(data.id) || 'none',
+      })
+
+      // 将任务加入消息队列
+      await enqueueTask({
+        taskId: task.id,
+        requestId: String(data.id),
+        fetchUrl: data.fetch_result,
       })
     }
     if (data.status.toLowerCase() === 'success') {

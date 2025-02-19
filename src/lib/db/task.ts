@@ -85,6 +85,7 @@ export async function getUserTasks(
     offset?: number
   }
 ): Promise<{ tasks: Task[]; total: number }> {
+  console.log('getUserTasks options:', options)
   const where = {
     userId,
     ...(options?.type && { type: options.type }),
