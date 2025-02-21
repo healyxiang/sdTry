@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
+import { LoaderCircle } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
+import ImgUploader from '@/components/ImgUploader'
 import { cn } from '@/lib/utils'
 import { uploadToR2 } from '@/lib/upload'
 import { ModelLabResponse } from '@/types/ModelLab'
@@ -25,10 +27,9 @@ const Img2Img = () => {
     }
   }, [files])
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = Array.from(event.target.files || [])
-    if (selectedFiles.length <= 3) {
-      setFiles(selectedFiles)
+  const handleFileChange = (files: File[]) => {
+    if (files.length <= 1) {
+      setFiles(files)
     } else {
       alert('Please upload a maximum of 3 files.')
     }
@@ -79,19 +80,12 @@ const Img2Img = () => {
       <div className="flex w-1/2 flex-col items-start gap-4 rounded-lg border p-4">
         {/* <h2>Upload Your Potential</h2> */}
         <h2>Upload 1-3 selfie photos to kickstart your success!</h2>
-        <div className="w-full rounded-md border-2 border-dashed border-gray-300 p-4">
-          <Input type="file" multiple onChange={handleFileChange} />
-          {fileImg?.length &&
-            fileImg.map((img, index) => (
-              <img
-                key={index}
-                src={img}
-                alt={`Uploaded ${index + 1}`}
-                className="mt-2 max-h-[200px]"
-              />
-            ))}
-          <p>PNG, JPG up to 10MB (1-3 files for best results)</p>
-        </div>
+        <ImgUploader
+          className="h-[300px]"
+          imgs={fileImg}
+          onChange={handleFileChange}
+          limitNum={1}
+        />
         <div>
           <label className="flex items-center gap-1">
             <input type="checkbox" checked={isSquare} onChange={handleSquareChange} />
@@ -113,15 +107,18 @@ const Img2Img = () => {
             {
               'bg-slate-100': !imageUrls?.length,
               'dark:bg-slate-700': !imageUrls?.length,
-              'animate-pulse rounded-md bg-slate-100': isPending,
+              'animate-pulse rounded-md bg-slate-100': true,
             }
           )}
         >
+          {isPending && <LoaderCircle className=" animate-spin" />}
           {imageUrls.map((url, index) => (
             <img key={index} src={url} alt={`Uploaded ${index + 1}`} className="h-full" />
           ))}
-          {!imageUrls.length && !isPending && (
-            <p className="text-">Your success images begins here</p>
+          {!imageUrls.length && (
+            <p className="text-lg">
+              {isPending ? 'Processing...' : 'Your success images begins here'}
+            </p>
           )}
         </div>
       </div>

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 export default function UserBtn() {
-  const { data: session } = useSession()
+  const { data: session } = useSession({ required: false })
   const userImg = session?.user?.image
   console.log('session in UserBtn:', session)
 

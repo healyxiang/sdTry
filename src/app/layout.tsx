@@ -66,6 +66,8 @@ export const metadata: Metadata = {
   },
 }
 
+console.log('ENVIRONMENT', process.env.ENVIRONMENT)
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const basePath = process.env.BASE_PATH || ''
 

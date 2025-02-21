@@ -12,7 +12,7 @@ interface TaskHistoryResponse {
 }
 
 export default function TaskHistoryCards() {
-  const { data: session } = useSession()
+  const { data: session } = useSession({ required: false })
   const [tasks, setTasks] = useState<Task[]>([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)

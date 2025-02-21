@@ -37,12 +37,12 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
   },
   callbacks: {
     async session({ session, token, user }) {
-      console.log('session in callback:', session)
       console.log('token in callback:', token)
-      console.log('user in callback:', user)
       return { ...session, user: { ...session.user, id: token.sub } }
     },
     async jwt({ token, user, account, profile }) {
@@ -51,14 +51,14 @@ export const authOptions: NextAuthOptions = {
       }
       return token
     },
-    async redirect({ url, baseUrl }) {
-      console.log('url in redirect:', url)
-      console.log('url in baseUrl:', baseUrl)
+    // async redirect({ url, baseUrl }) {
+    //   console.log('url in redirect:', url)
+    //   console.log('url in baseUrl:', baseUrl)
 
-      if (url.startsWith('/')) return `${baseUrl}${url}`
-      // Allows callback URLs on the same origin
-      else if (new URL(url).origin === baseUrl) return url
-      return baseUrl
-    },
+    //   if (url.startsWith('/')) return `${baseUrl}${url}`
+    //   // Allows callback URLs on the same origin
+    //   else if (new URL(url).origin === baseUrl) return url
+    //   return baseUrl
+    // },
   },
 }

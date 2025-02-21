@@ -39,8 +39,8 @@ const ModelSelector = ({ onModelSelect }: ModelSelectorProps) => {
               src={model.previewImage}
               alt={model.name}
               width={100}
-              height={100}
-              className="mb-2 w-full rounded-md object-cover"
+              height={80}
+              className="mb-2 h-[calc(100%-30px)] w-full rounded-md object-cover"
             />
             <p className="gap-1 text-xs font-medium">
               <span className="mr-1">{model.name}</span>

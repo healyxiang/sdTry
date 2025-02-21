@@ -16,11 +16,12 @@ export const models: Model[] = [
       'masterpiece, best quality, stick figure, cartoon cat, calico cat, yellow petal pattern, drop shaped pupil and iris, petal like hair at the tip of the ear, hydrangea fabric collar on the neck, soft watercolor texture, warm morning light, 2.5 q version of the head and body, simple and smooth lines, no shadows and high saturation illustrations',
   },
   {
-    id: 'ae-sdxl-v1.jpg',
-    name: 'AE SDXL V1',
+    id: 'pony-v6',
+    name: 'Pony v6',
     description: 'Japanese anime style portraits',
-    previewImage: '/models/ae-sdxl-v1.jpg',
-    prompt: '',
+    previewImage: '/models/pony-v6.jpg',
+    prompt:
+      'masterpiece, best quality, stick figure, cartoon cat, calico cat, yellow petal pattern, drop shaped pupil and iris, petal like hair at the tip of the ear, hydrangea fabric collar on the neck, soft watercolor texture, warm morning light, 2.5 q version of the head and body, simple and smooth lines, no shadows and high saturation illustrations',
   },
   {
     id: 'crystal-clear-xlv1',
