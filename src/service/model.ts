@@ -28,6 +28,7 @@ const communityImg2ImgApi = async ({ initImg, modelId }: ImgBody) => {
     }),
   })
   const data = (await response.json()) as ModelLabResponse
+  return data
   if (data.status === TaskStatus.success) {
     return data
   } else {
@@ -36,21 +37,21 @@ const communityImg2ImgApi = async ({ initImg, modelId }: ImgBody) => {
 }
 
 // API 请求函数
-const fetchModelLab = async (data: any): Promise<ModelLabResponse> => {
-  const response = await fetch('/api/realtime/text2img', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  })
+// const fetchModelLab = async (data: any): Promise<ModelLabResponse> => {
+//   const response = await fetch('/api/realtime/text2img', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(data),
+//   })
 
-  if (!response.ok) {
-    throw new Error('Network response was not ok')
-  }
+//   if (!response.ok) {
+//     throw new Error('Network response was not ok')
+//   }
 
-  return response.json()
-}
+//   return response.json()
+// }
 
 // 封装的查询钩子
 // export const useFetchModelLab = (data: any) => {
@@ -69,8 +70,8 @@ const fetchModelLab = async (data: any): Promise<ModelLabResponse> => {
 // communityImg2Img
 export function useImg2ImgApi() {
   const mutation = useMutation({
-    mutationFn: (body: ImgBody) => {
-      return communityImg2ImgApi(body)
+    mutationFn: async (body: ImgBody) => {
+      return await communityImg2ImgApi(body)
     },
   })
   return mutation

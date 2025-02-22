@@ -18,6 +18,7 @@ const Img2Img = () => {
   const [files, setFiles] = useState<File[]>([])
   const [imageUrls, setImageUrls] = useState<string[]>([])
   const [isSquare, setIsSquare] = useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
   const { mutate, data, isPending } = useImg2ImgApi()
   const [selectedModel, setSelectedModel] = useState<string>('realistic')
 
@@ -36,14 +37,19 @@ const Img2Img = () => {
   }
 
   useEffect(() => {
+    console.log('data in useEffect:', data)
     if (data) {
       setImageUrls(data.output)
+      if (data.status === 'processing') {
+        setIsProcessing(true)
+      }
     }
   }, [data])
 
   const handleUpload = async () => {
     if (files) {
       try {
+        setIsProcessing(false)
         const file = files[0]
         const result = await uploadToR2(file, file.type)
         console.log('result after uploadToR2:', result)
@@ -51,7 +57,6 @@ const Img2Img = () => {
         // 调用 /api/realtime/text2img 接口
         // const response = await fetch('/api/realtime/img2img', {
         const response = mutate({ initImg: result, modelId: selectedModel })
-        console.log('response after mutate:')
         // setImageUrls(data.output)
       } catch (error) {
         console.error('Upload or API call failed:', error)
@@ -59,15 +64,15 @@ const Img2Img = () => {
     }
   }
 
-  const handleSquareChange = () => {
-    setIsSquare(!isSquare)
-  }
+  // const handleSquareChange = () => {
+  //   setIsSquare(!isSquare)
+  // }
 
   const handleModelSelect = (modelId: string) => {
     setSelectedModel(modelId)
   }
 
-  const handleContinue = async () => {
+  const handleCreate = async () => {
     // 处理继续操作
     console.log('Files:', files)
     console.log('Is Square:', isSquare)
@@ -78,22 +83,21 @@ const Img2Img = () => {
   return (
     <div className="flex min-h-[calc(100vh-120px)] gap-4">
       <div className="flex w-1/2 flex-col items-start gap-4 rounded-lg border p-4">
-        {/* <h2>Upload Your Potential</h2> */}
-        <h2>Upload 1-3 selfie photos to kickstart your success!</h2>
+        <h2>Upload 1 selfie photo to kickstart your success!</h2>
         <ImgUploader
           className="h-[300px]"
           imgs={fileImg}
           onChange={handleFileChange}
           limitNum={1}
         />
-        <div>
+        {/* <div>
           <label className="flex items-center gap-1">
             <input type="checkbox" checked={isSquare} onChange={handleSquareChange} />
             Square (1:1)
           </label>
-        </div>
+        </div> */}
         <ModelSelector onModelSelect={handleModelSelect} />
-        <Button onClick={handleContinue}>Create Avatar</Button>
+        <Button onClick={handleCreate}>Create Avatar</Button>
         <p className="text-[12px]">
           For your privacy, uploaded and generated images are automatically deleted after 1 hour.
           Please download and save any images you wish to keep.
@@ -116,8 +120,12 @@ const Img2Img = () => {
             <img key={index} src={url} alt={`Uploaded ${index + 1}`} className="h-full" />
           ))}
           {!imageUrls.length && (
-            <p className="text-lg">
-              {isPending ? 'Processing...' : 'Your success images begins here'}
+            <p className="px-2 text-center text-lg">
+              {isPending
+                ? 'Processing...'
+                : isProcessing
+                  ? 'That takes a while, you can get result in dashboard after minutes.'
+                  : 'Your success images begins here'}
             </p>
           )}
         </div>

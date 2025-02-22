@@ -4,6 +4,8 @@ import { getUserTasks } from '@/lib/db/task'
 import { User } from '@/types/User'
 import { TaskType, TaskStatus } from '@prisma/client'
 
+const TempUserId = 'cm7b4p2q70000fw3oac1sku93'
+
 export async function GET(request: Request) {
   const session = await getServerSession(authOptions)
   const user = session?.user as User
@@ -20,7 +22,7 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get('limit') || '10')
     const offset = parseInt(searchParams.get('offset') || '0')
 
-    const result = await getUserTasks(user.id, {
+    const result = await getUserTasks(user?.id || TempUserId, {
       type: type as TaskType, // TaskType
       status: status as TaskStatus, // TaskStatus
       limit,

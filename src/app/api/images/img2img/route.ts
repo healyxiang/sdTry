@@ -6,6 +6,8 @@ import { TaskStatus, TaskType } from '@prisma/client'
 import { User } from '@/types/User'
 import { enqueueTask } from '@/lib/rabbitmq/taskQueue'
 
+const TempUserId = 'cm7b4p2q70000fw3oac1sku93'
+
 export async function POST(req: Request) {
   // 获取用户会话
   const session = await getServerSession(authOptions)
@@ -22,7 +24,7 @@ export async function POST(req: Request) {
     // 创建初始任务记录
     const task = await createTask({
       type: 'IMG2IMG',
-      userId: user.id,
+      userId: user?.id || TempUserId,
       initImage: body.init_image, // 初始图片URL
       modelId: body.model_id || 'default',
       settings: {
